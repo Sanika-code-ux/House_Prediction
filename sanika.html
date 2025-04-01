@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        input, select, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            font-size: 20px;
+            color: green;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>House Price Prediction</h2>
+        <form id="priceForm">
+            <label>Size (sqft):</label>
+            <input type="number" id="size" name="size" required>
+            
+            <label>Bedrooms:</label>
+            <input type="number" id="bedrooms" name="bedrooms" required>
+            
+            <label>Bathrooms:</label>
+            <input type="number" id="bathrooms" name="bathrooms" required>
+
+            <label>Location:</label>
+            <select id="location" name="location">
+                <option value="Downtown">Downtown</option>
+                <option value="Suburbs">Suburbs</option>
+                <option value="Rural">Rural</option>
+            </select>
+
+            <button type="submit">Predict Price</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('priceForm').onsubmit = async function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(event.target);
+
+            let response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            let data = await response.json();
+
+            if (data.predicted_price) {
+                document.getElementById('result').innerText = "Predicted Price: " + data.predicted_price;
+            } else {
+                document.getElementById('result').innerText = "Error: " + data.error;
+            }
+        }
+    </script>
+</body>
+</html>
+

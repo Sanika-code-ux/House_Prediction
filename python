@@ -1,0 +1,10 @@
+from prophet import Prophet
+
+df = pd.read_csv("data/house_prices.csv")
+df = df[['date', 'price']].rename(columns={"date": "ds", "price": "y"})
+
+prophet = Prophet()
+prophet.fit(df)
+future = prophet.make_future_dataframe(periods=365)
+forecast = prophet.predict(future)
+forecast.to_csv("data/price_forecast.csv", index=False)
